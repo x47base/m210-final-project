@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: counter-frontend
+    sandbox: learn-kubernetes
+    learn-kubernetes: frontendapp
+  name: counter-frontend
+spec:
+  to:
+    kind: Service
+    name: counter-frontend
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

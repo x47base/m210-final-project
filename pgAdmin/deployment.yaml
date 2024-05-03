@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-postgresadmin
+  labels:
+    app: postgresadmin
+    sandbox: learn-kubernetes
+    learn-kubernetes: postgresadmin
+spec:
+  selector:
+    matchLabels:
+      app: postgresadmin
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgresadmin
+        sandbox: learn-kubernetes
+        learn-kubernetes: postgresadmin
+    spec:
+      containers:
+        - name: postgresadmin
+          image: ghcr.io/modul-i-ch-109/pgadmin4:latest
+          ports:
+           -  containerPort: 80
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresadmin-config
+                  key: PGADMIN_DEFAULT_EMAIL
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgresadmin-config
+                  key: PGADMIN_DEFAULT_PASSWORD
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+          imagePullPolicy: IfNotPresent
+
+      restartPolicy: Always
